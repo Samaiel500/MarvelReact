@@ -3,6 +3,7 @@ import './charList.scss';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errrorMassage/ErrorMassage';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const CharList = (props) => {
     const [charList, setCharList] = useState([]);
@@ -49,20 +50,21 @@ const CharList = (props) => {
             styleCard = {'objectFit' : 'unset'};
         }
         return (
-            <li ref={el => itemRefs.current[i] = el} 
-                tabIndex={0}
-                key={id}
-                onClick={() => { props.onCharId(id); changeStyle(i) }}
-                className="char__item"
-                onKeyPress={(e) => {
-                    if (e.key === ' ' || e.key === "Enter") {
-                        props.onCharId(id);
-                        changeStyle(i);
-                    }
-                }}>
-                <img style={styleCard} src={thumbnail} alt={name}/>
-                <div className="char__name">{name}</div>
-            </li>
+            <CSSTransition key={id} timeout={500} classNames="char__item">
+                <li ref={el => itemRefs.current[i] = el} 
+                    tabIndex={0}
+                    onClick={() => { props.onCharId(id); changeStyle(i) }}
+                    className="char__item"
+                    onKeyPress={(e) => {
+                        if (e.key === ' ' || e.key === "Enter") {
+                            props.onCharId(id);
+                            changeStyle(i);
+                        }
+                    }}>
+                    <img style={styleCard} src={thumbnail} alt={name}/>
+                    <div className="char__name">{name}</div>
+                </li>
+            </CSSTransition>
         )
     })
     const spinner = loaded && !newItemLoading ? <Spinner /> : null;
@@ -72,7 +74,9 @@ const CharList = (props) => {
             {spinner}
             {errorMessage}
             <ul className="char__grid">
-                {card}
+                <TransitionGroup component={null}>
+                    {card}
+                </TransitionGroup>
             </ul>
             <button style={{'display': charEnded ? 'none' : 'block'}} disabled={newItemLoading} onClick={() => updateList(offSet)} className="button button__main button__long">
                 <div className="inner">load more</div>
