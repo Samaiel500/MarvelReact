@@ -26,7 +26,7 @@ const ComicsList = () => {
     const [newComicsLoading, setNewComicsLoading] = useState(false);
     const [comicsEnded, setComicsEnded] = useState(false);
 
-    const { loaded, error, getComics, process, setProcess } = useMarvelService();
+    const { getComics, process, setProcess } = useMarvelService();
 
     const updateList = (offSet, initial) => {
         initial ? setNewComicsLoading(false) : setNewComicsLoading(true);
@@ -48,6 +48,7 @@ const ComicsList = () => {
 
     useEffect(() => {
         updateList(offSet, true);
+        //eslint-disable-next-line
     }, [])
 
     const item = arr => {

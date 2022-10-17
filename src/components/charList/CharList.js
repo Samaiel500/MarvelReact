@@ -1,4 +1,4 @@
-import { useState, useEffect,useRef } from 'react';
+import { useState, useEffect,useRef, useMemo } from 'react';
 import './charList.scss';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -30,6 +30,7 @@ const CharList = (props) => {
 
     useEffect(() => {
         updateList(offSet, true);
+        //eslint-disable-next-line
     }, [])
 
     const updateList = (offSet, initial) => {
@@ -93,9 +94,14 @@ const CharList = (props) => {
         )
     }
 
+    const elements = useMemo(() => {
+        return setContent(process, () => items(charList), newItemLoading);
+        //eslint-disable-next-line
+    }, [process])
+
     return (
         <div className="char__list">
-            {setContent(process, () => items(charList), newItemLoading)}
+            {elements}
             <button style={{'display': charEnded ? 'none' : 'block'}} disabled={newItemLoading} onClick={() => updateList(offSet)} className="button button__main button__long">
                 <div className="inner">load more</div>
             </button>
